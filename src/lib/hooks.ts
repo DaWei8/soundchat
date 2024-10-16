@@ -16,7 +16,7 @@ function useAudioClips(query: string) {
         const { data, error } = await supabase
           .from("audio_clips")
           .select()
-          .limit(10);
+          .limit(30);
         if (error) {
           setError(error.message);
         } else {

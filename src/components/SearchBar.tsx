@@ -18,13 +18,13 @@ export default function SearchBar() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex space-x-2 mb-4">
+    <form onSubmit={handleSearch} className="flex max-w-[768px] w-full mx-auto space-x-2 mb-4">
       <Input
         type="text"
         placeholder="Search for audio clips"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="flex-grow"
+        className="flex-grow w-full "
       />
       <Button type="submit">
         <Search className="mr-2 h-4 w-4" /> Search
