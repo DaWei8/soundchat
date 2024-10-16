@@ -1,34 +1,47 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react'
-import { supabase } from './supabase'
-import { AudioClip } from './types'
+import { useState, useEffect } from "react";
+import { supabase } from "./supabase";
+import { AudioClip } from "./types";
 
-export function useAudioClips(query: string) {
-  const [clips, setClips] = useState<AudioClip[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+function useAudioClips(query: string) {
+  const [clips, setClips] = useState<AudioClip[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchClips() {
-      setLoading(true)
-      const { data, error } = await supabase
-        .from('audio_clips')
-        .select('*')
-        .ilike('name', `%${query}%`)
-        .order('created_at', { ascending: false })
-        .limit(10)
-
-      if (error) {
-        setError(error.message)
+      setLoading(true);
+      if (query === "") {
+        const { data, error } = await supabase
+          .from("audio_clips")
+          .select()
+          .limit(10);
+        if (error) {
+          setError(error.message);
+        } else {
+          setClips(data || []);
+        }
       } else {
-        setClips(data || [])
+        const { data, error } = await supabase
+          .from("audio_clips")
+          .select("*")
+          .ilike("name", `%${query}%`)
+          .order("created_at", { ascending: false })
+          .limit(10);
+        if (error) {
+          setError(error.message);
+        } else {
+          setClips(data || []);
+        }
       }
-      setLoading(false)
+      setLoading(false);
     }
 
-    fetchClips()
-  }, [query])
+    fetchClips();
+  }, [query]);
 
-  return { clips, loading, error }
+  return { clips, loading, error };
 }
+
+export default useAudioClips;
